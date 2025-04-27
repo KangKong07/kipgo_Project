@@ -1,0 +1,40 @@
+### Member Create Test(Post)
+POST http://localhost:8088/api/member
+Content-Type: application/json
+
+{
+  "member_ID": "testuser02",
+  "member_PWD": "mypassword",
+  "delete_YN": "N",
+  "join_DATE": "2025-04-27T12:00:00",
+  "chk_DATE": "2025-04-27T12:00:00",
+  "name": "테스트유저2",
+  "tel_NO": "010-3333-4444",
+  "email": "testuser02@example.com",
+  "chk_ID": "admin"
+}
+
+
+### Member 수정 (PUT)
+PUT http://localhost:8088/api/member/rudgns2040
+Content-Type: application/json
+
+{
+  "member_ID": "rudgns2040",
+  "member_PWD": "updatedPassword123",
+  "delete_YN": "N",
+  "join_DATE": "2025-04-19T15:00:00.000+00:00",
+  "chk_DATE": "2025-04-27T15:00:00.000+00:00",
+  "name": "업데이트된 강콩",
+  "tel_NO": "010-1111-2222",
+  "email": "updatedemail@example.com",
+  "chk_ID": "admin"
+}
+
+
+### Member 삭제 (Delete)
+DELETE http://localhost:8088/api/member/testuser02
+Content-Type: application/json
+
+### Meber 조회(Select)
+GET http://localhost:8088/api/member/testuser02
