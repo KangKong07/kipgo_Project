@@ -1,16 +1,17 @@
 package com.spring.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
+@ToString(exclude = {"chkId", "chkDate"})
 @Entity
 @Table(name = "WEEK")
 public class Week {
@@ -41,18 +42,4 @@ public class Week {
     @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;              // 최종작업시간
-
-    @Override
-    public String toString() {
-        return "Week {" +
-                "weekId=" + weekId +
-                ", weekStaDate=" + weekStaDate +
-                ", weekEndDate=" + weekEndDate +
-                ", weekStaDayCd='" + weekStaDayCd + '\'' +
-                ", weekEndDayCd='" + weekEndDayCd + '\'' +
-                ", vacationYn='" + vacationYn + '\'' +
-                ", chkId='" + chkId + '\'' +
-                ", chkDate=" + chkDate +
-                "}";
-    }
 }

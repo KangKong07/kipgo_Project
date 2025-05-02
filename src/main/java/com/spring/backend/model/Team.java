@@ -1,9 +1,16 @@
 package com.spring.backend.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString(exclude = {"chkId", "chkDate"})
 @Entity
 @Table(name = "TEAM")
 public class Team {
@@ -47,119 +54,4 @@ public class Team {
     @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;              // 최종작업시간
-
-    public String getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(String teamId) {
-        this.teamId = teamId;
-    }
-
-    public String getTeamNm() {
-        return teamNm;
-    }
-
-    public void setTeamNm(String teamNm) {
-        this.teamNm = teamNm;
-    }
-
-    public String getWeekStaDayCd() {
-        return weekStaDayCd;
-    }
-
-    public void setWeekStaDayCd(String weekStaDayCd) {
-        this.weekStaDayCd = weekStaDayCd;
-    }
-
-    public int getVacationLimit() {
-        return vacationLimit;
-    }
-
-    public void setVacationLimit(int vacationLimit) {
-        this.vacationLimit = vacationLimit;
-    }
-
-    public String getPushUseYn() {
-        return pushUseYn;
-    }
-
-    public void setPushUseYn(String pushUseYn) {
-        this.pushUseYn = pushUseYn;
-    }
-
-    public int getGoalRegDeadline() {
-        return goalRegDeadline;
-    }
-
-    public void setGoalRegDeadline(int goalRegDeadline) {
-        this.goalRegDeadline = goalRegDeadline;
-    }
-
-    public int getFeedbackRegDeadline() {
-        return feedbackRegDeadline;
-    }
-
-    public void setFeedbackRegDeadline(int feedbackRegDeadline) {
-        this.feedbackRegDeadline = feedbackRegDeadline;
-    }
-
-    public String getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(String adminId) {
-        this.adminId = adminId;
-    }
-
-    public Date getStaDate() {
-        return staDate;
-    }
-
-    public void setStaDate(Date staDate) {
-        this.staDate = staDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getChkId() {
-        return chkId;
-    }
-
-    public void setChkId(String chkId) {
-        this.chkId = chkId;
-    }
-
-    public Date getChkDate() {
-        return chkDate;
-    }
-
-    public void setChkDate(Date chkDate) {
-        this.chkDate = chkDate;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Team {" +
-                "teamId='" + teamId + '\'' +
-                ", teamNm='" + teamNm + '\'' +
-                ", weekStaDayCd='" + weekStaDayCd + '\'' +
-                ", vacationLimit=" + vacationLimit +
-                ", pushUseYn='" + pushUseYn + '\'' +
-                ", goalRegDeadline=" + goalRegDeadline +
-                ", feedbackRegDeadline=" + feedbackRegDeadline +
-                ", adminId='" + adminId + '\'' +
-                ", staDate=" + staDate +
-                ", endDate=" + endDate +
-                ", chkId='" + chkId + '\'' +
-                ", chkDate=" + chkDate +
-                " }";
-    }
 }
