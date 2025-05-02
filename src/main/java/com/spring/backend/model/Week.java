@@ -1,10 +1,16 @@
 package com.spring.backend.model;
 
 import jakarta.persistence.*;
-import jdk.jshell.Snippet;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "WEEK")
 public class Week {
@@ -35,71 +41,6 @@ public class Week {
     @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;              // 최종작업시간
-
-
-    public WeekId getWeekId() {
-        return weekId;
-    }
-
-    public void setWeekId(WeekId id) {
-        this.weekId = id;
-    }
-
-    public Date getWeekStaDate() {
-        return weekStaDate;
-    }
-
-    public void setWeekStaDate(Date weekStaDate) {
-        this.weekStaDate = weekStaDate;
-    }
-
-    public Date getWeekEndDate() {
-        return weekEndDate;
-    }
-
-    public void setWeekEndDate(Date weekEndDate) {
-        this.weekEndDate = weekEndDate;
-    }
-
-    public String getWeekStaDayCd() {
-        return weekStaDayCd;
-    }
-
-    public void setWeekStaDayCd(String weekStaDayCd) {
-        this.weekStaDayCd = weekStaDayCd;
-    }
-
-    public String getWeekEndDayCd() {
-        return weekEndDayCd;
-    }
-
-    public void setWeekEndDayCd(String weekEndDayCd) {
-        this.weekEndDayCd = weekEndDayCd;
-    }
-
-    public String getVacationYn() {
-        return vacationYn;
-    }
-
-    public void setVacationYn(String vacationYn) {
-        this.vacationYn = vacationYn;
-    }
-
-    public String getChkId() {
-        return chkId;
-    }
-
-    public void setChkId(String chkId) {
-        this.chkId = chkId;
-    }
-
-    public Date getChkDate() {
-        return chkDate;
-    }
-
-    public void setChkDate(Date chkDate) {
-        this.chkDate = chkDate;
-    }
 
     @Override
     public String toString() {
