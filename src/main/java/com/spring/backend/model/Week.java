@@ -112,6 +112,6 @@ public class Week {
                 ", vacationYn='" + vacationYn + '\'' +
                 ", chkId='" + chkId + '\'' +
                 ", chkDate=" + chkDate +
-                ' }';
+                "}";
     }
 }
