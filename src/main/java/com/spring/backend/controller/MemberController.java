@@ -38,12 +38,12 @@ public class MemberController {
     public ResponseEntity<Member> update(@PathVariable String id, @RequestBody Member member) {
         return memberService.findById(id)
                 .map(existingMember -> {
-                    existingMember.setNAME(member.getNAME());
-                    existingMember.setTEL_NO(member.getNAME());
-                    existingMember.setEMAIL(member.getEMAIL());
-                    existingMember.setMEMBER_PWD(member.getMEMBER_PWD());
-                    existingMember.setDELETE_YN(member.getDELETE_YN());
-                    existingMember.setCHK_DATE(member.getCHK_DATE());
+                    existingMember.setName(member.getName());
+                    existingMember.setTelNo(member.getTelNo());
+                    existingMember.setEmail(member.getEmail());
+                    existingMember.setMemberPwd(member.getMemberPwd());
+                    existingMember.setDeleteYn(member.getDeleteYn());
+                    existingMember.setChkDate(member.getChkDate());
 
                     Member savedMember = memberService.save(existingMember);
                     return ResponseEntity.ok(existingMember);

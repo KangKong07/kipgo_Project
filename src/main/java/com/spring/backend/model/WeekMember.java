@@ -13,16 +13,10 @@ import java.util.Date;
 @ToString(exclude = {"chkId" ,"chkDate"})
 @Entity
 @Table(name = "WEEK_MEMBER")
-public class Week_Member {
+public class WeekMember {
 
-    @Id @Column(name = "TEAM_ID")
-    private String teamId;     // 팀ID
-
-    @Id @Column(name = "WEEK")
-    private int week;           // 주차
-
-    @Id @Column(name = "MEMBER_ID")
-    private String memberId;   // 회원ID
+    @EmbeddedId
+    private WeekMemberId weekMemberId;  // 복합키(팀ID/주차/회원ID)
 
     @Column(name = "VACATION_YN")
     private String vacationYn;     // 휴가여부

@@ -2,7 +2,6 @@ package com.spring.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Date;
 
@@ -14,13 +13,10 @@ import java.util.Date;
 @ToString(exclude = {"chkId", "chkDate"})
 @Entity
 @Table(name = "TEAM_MEMBER")
-public class Team_Member {
+public class TeamMember {
 
-    @Id @Column(name = "TEAM_ID")
-    private String teamId;         // 팀ID
-
-    @Id @Column(name = "MEMBER_ID")
-    private String memberId;       // 회원ID
+    @EmbeddedId
+    private TeamMemberId teamMemberId;         // 복합키 클래스(팀ID, 회원ID)
 
     @Column(name = "NICKNAME")
     private String nickName;        // 팀내 별명

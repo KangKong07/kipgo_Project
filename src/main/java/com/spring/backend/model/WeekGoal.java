@@ -13,19 +13,10 @@ import java.util.Date;
 @ToString(exclude = {"chkId", "chkDate"})
 @Entity
 @Table(name = "WEEK_GOAL")
-public class Week_Goal {
+public class WeekGoal {
 
-    @Id @Column(name = "TEAM_ID")
-    private String teamId;         // 팀ID
-
-    @Id @Column(name = "WEEK")
-    private int week;               // 주차
-
-    @Id @Column(name = "MEMBER_ID")
-    private String memberId;       // 회원ID
-
-    @Id @Column(name = "GOAL_NO")
-    private int goalNo;            // 목표번호
+    @EmbeddedId
+    private WeekGoalId weekGoalId;         // 복합키(팀ID/회원ID/주차/목표번호)
 
     @Column(name = "GOAL")
     private String goal;                // 목표내용
