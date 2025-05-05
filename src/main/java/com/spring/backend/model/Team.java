@@ -8,9 +8,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
-@ToString(exclude = {"chkId", "chkDate"})
 @Entity
 @Table(name = "TEAM")
 public class Team {
