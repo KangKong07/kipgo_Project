@@ -40,4 +40,33 @@ public class Week {
     @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;              // 최종작업시간
+
+    /* [ setter ] */
+    public void setWeekStaDate(Date weekStaDate) {
+        this.weekStaDate = weekStaDate;
+    }
+    public void setWeekEndDate(Date weekEndDate) {
+        this.weekEndDate = weekEndDate;
+    }
+    public void setWeekStaDayCd(String weekStaDayCd) {
+        this.weekStaDayCd = weekStaDayCd;
+    }
+    public void setWeekEndDayCd(String weekEndDayCd) {
+        this.weekEndDayCd = weekEndDayCd;
+    }
+    public void setVacationYn(String vacationYn) {
+        this.vacationYn = vacationYn;
+    }
+    public void setChkId(String chkId) {
+        this.chkId = chkId;
+    }
+    public void setChkDate(Date chkDate) {
+        this.chkDate = chkDate;
+    }
+    public void setTeamId(String teamId) {
+        this.weekId.setTeamId(teamId);
+    }
+    public void setWeek(int week) {
+        this.weekId.setWeek(week);
+    }
 }

@@ -43,4 +43,24 @@ public class Member {
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;      // 최종작업시간
 
+
+    /* [ setter ] */
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setTelNo(String telNo) {
+        this.telNo = telNo;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setDeleteYn(String deleteYn) {
+        this.deleteYn = deleteYn;
+    }
+    public void setChkDate(Date chkDate) {
+        this.chkDate = chkDate;
+    }
+    public void setMemberPwd(String memberPwd) {
+        this.memberPwd = memberPwd;
+    }
 }

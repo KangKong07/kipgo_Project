@@ -36,6 +36,29 @@ public class WeekGoal {
 
     @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date chkDate;              // 최종작업시간
+    private Date chkDate;
 
+
+    /* [ setter ] */
+    public void setGoal(String goal) {
+        this.goal = goal;
+    }
+    public void setOrderSeq(int orderSeq) {
+        this.orderSeq = orderSeq;
+    }
+    public void setMainGoalYn(String mainGoalYn) {
+        this.mainGoalYn = mainGoalYn;
+    }
+    public void setAchieveStatusCd(String achieveStatusCd) {
+        this.achieveStatusCd = achieveStatusCd;
+    }
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+    public void setChkId(String chkId) {
+        this.chkId = chkId;
+    }
+    public void setChkDate(Date chkDate) {
+        this.chkDate = chkDate;
+    }
 }

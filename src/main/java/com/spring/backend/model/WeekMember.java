@@ -41,4 +41,40 @@ public class WeekMember {
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;          // 최종작업시간
 
+
+    /* [ setter ] */
+    public void setVacationYn(String vacationYn) {
+        this.vacationYn = vacationYn;
+    }
+    public void setGoalRegYn(String goalRegYn) {
+        this.goalRegYn = goalRegYn;
+    }
+    public void setFeedbackRegYn(String feedbackRegYn) {
+        this.feedbackRegYn = feedbackRegYn;
+    }
+    public void setTotAchieveRate(int totAchieveRate) {
+        this.totAchieveRate = totAchieveRate;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    public void setMainGoalUnmet(String mainGoalUnmet) {
+        this.mainGoalUnmet = mainGoalUnmet;
+    }
+    public void setChkId(String chkId) {
+        this.chkId = chkId;
+    }
+    public void setChkDate(Date chkDate) {
+        this.chkDate = chkDate;
+    }
+    public void setTeamId(String teamId) {
+        this.weekMemberId.setTeamId(teamId);
+    }
+    public void setMemberId(String memberId) {
+        this.weekMemberId.setMemberId(memberId);
+    }
+    public void setWeek(int week) {
+        this.weekMemberId.setWeek(week);
+    }
+
 }

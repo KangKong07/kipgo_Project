@@ -52,4 +52,54 @@ public class Team {
     @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;              // 최종작업시간
+
+    /* [setter] */
+    public void setTeamNm(String teamNm) {
+        this.teamNm = teamNm;
+    }
+    public void setWeekStaDayCd(String weekStaDayCd) {
+        this.weekStaDayCd = weekStaDayCd;
+    }
+    public void setVacationLimit(int vacationLimit) {
+        this.vacationLimit = vacationLimit;
+    }
+    public void setPushUseYn(String pushUseYn) {
+        this.pushUseYn = pushUseYn;
+    }
+    public void setGoalRegDeadline(int goalRegDeadline) {
+        this.goalRegDeadline = goalRegDeadline;
+    }
+    public void setFeedbackRegDeadline(int feedbackRegDeadline) {
+        this.feedbackRegDeadline = feedbackRegDeadline;
+    }
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+    public void setStaDate(Date staDate) {
+        this.staDate = staDate;
+    }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    public void setChkDate(Date chkDate) {
+        this.chkDate = chkDate;
+    }
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+    public String getTeamId() {
+        return teamId;
+    }
+    public String getTeamNm() {
+        return teamNm;
+    }
+    public String getWeekStaDayCd() {
+        return weekStaDayCd;
+    }
+    public int getVacationLimit() {
+        return vacationLimit;
+    }
+    public String getPushUseYn() {
+        return pushUseYn;
+    }
 }

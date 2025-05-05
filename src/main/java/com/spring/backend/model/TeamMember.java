@@ -40,4 +40,33 @@ public class TeamMember {
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;          // 최종작업시간
 
+
+    /* [ setter ] */
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void setJoinStaDate(Date joinStaDate) {
+        this.joinStaDate = joinStaDate;
+    }
+
+    public void setJoinEndDate(Date joinEndDate) {
+        this.joinEndDate = joinEndDate;
+    }
+
+    public void setProfileFileId(String profileFileId) {
+        this.profileFileId = profileFileId;
+    }
+
+    public void setTeamSetYn(String teamSetYn) {
+        this.teamSetYn = teamSetYn;
+    }
+
+    public void setChkId(String chkId) {
+        this.chkId = chkId;
+    }
+
+    public void setChkDate(Date chkDate) {
+        this.chkDate = chkDate;
+    }
 }
