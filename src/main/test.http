@@ -3,38 +3,208 @@ POST http://localhost:8088/api/member
 Content-Type: application/json
 
 {
-  "member_ID": "testuser02",
-  "member_PWD": "mypassword",
-  "delete_YN": "N",
-  "join_DATE": "2025-04-27T12:00:00",
-  "chk_DATE": "2025-04-27T12:00:00",
+  "memberId": "testuser04",
+  "memberPwd": "mypassword",
+  "deleteYn": "N",
+  "joinDate": "2025-04-27T12:00:00",
+  "chkDate": "2025-04-27T12:00:00",
   "name": "테스트유저2",
-  "tel_NO": "010-3333-4444",
+  "telNo": "010-3333-4444",
   "email": "testuser02@example.com",
-  "chk_ID": "admin"
+  "chkId": "admin"
 }
 
 
 ### Member 수정 (PUT)
-PUT http://localhost:8088/api/member/rudgns2040
+PUT http://localhost:8088/api/member/testuser04
 Content-Type: application/json
 
 {
-  "member_ID": "rudgns2040",
-  "member_PWD": "updatedPassword123",
-  "delete_YN": "N",
-  "join_DATE": "2025-04-19T15:00:00.000+00:00",
-  "chk_DATE": "2025-04-27T15:00:00.000+00:00",
-  "name": "업데이트된 강콩",
-  "tel_NO": "010-1111-2222",
+  "memberId": "testuser04",
+  "memberPwd": "updatedPassword123",
+  "deleteYn": "Y",
+  "joinDate": "2025-04-19T15:00:00.000+00:00",
+  "chkDate": "2025-05-05T15:00:00.000+00:00",
+  "name": "업데이트된 테스트유저",
+  "telNo": "010-1111-3456",
   "email": "updatedemail@example.com",
-  "chk_ID": "admin"
+  "chkId": "admin"
 }
 
 
 ### Member 삭제 (Delete)
-DELETE http://localhost:8088/api/member/testuser02
+DELETE http://localhost:8088/api/member/testuser04
 Content-Type: application/json
 
 ### Meber 조회(Select)
-GET http://localhost:8088/api/member/testuser02
+GET http://localhost:8088/api/member/testuser04
+
+### Team 추가(Insert)
+POST http://localhost:8088/api/team
+Content-Type: application/json
+
+{
+  "teamId": "team1",
+  "teamNm": "테스트팀1",
+  "weekStaDayCd": "SUN",
+  "vacationLimit": 3,
+  "pushUseYn": "Y",
+  "goalRegDeadline": 2,
+  "feedbackRegDeadline": 2,
+  "adminId": "rudgns2040",
+  "chkId": "admin"
+}
+
+### Team 조회 (Select)
+GET http://localhost:8088/api/team/TeamTest1
+
+### Team 변경 (Update)
+PUT http://localhost:8088/api/team/TeamTest1
+Content-Type: application/json
+
+{
+  "teamId": "team1",
+  "teamNm": "테스트팀123",
+  "weekStaDayCd": "SAT",
+  "vacationLimit": 3,
+  "pushUseYn": "Y",
+  "goalRegDeadline": 5,
+  "feedbackRegDeadline": 5,
+  "adminId": "rudgns2040",
+  "chkId": "admin"
+}
+
+
+### Team 삭제(Delete)
+DELETE http://localhost:8088/api/team/TeamTest1
+
+
+### Team Member 추가(Insert)
+POST http://localhost:8088/api/team-member
+Content-Type: application/json
+
+{
+  "teamMemberId": {
+    "teamId": "team1",
+    "memberId": "testuser01"
+  },
+  "nickName": "홍길동",
+  "joinStaDate": "2025-04-20T10:00:00",
+  "joinEndDate": "2025-05-20T10:00:00",
+  "profileFileId": "FILE123456",
+  "teamSetYn": "Y",
+  "chkId": "admin",
+  "chkDate": "2025-05-05T12:00:00"
+}
+
+### Team Member 조회 (Select)
+GET http://localhost:8088/api/team-member/team1/testuser01
+
+### Team Member 변경(Update)
+PUT http://localhost:8088/api/team-member/team1/testuser01
+Content-Type: application/json
+
+{
+  "teamMemberId": {
+    "teamId": "team1",
+    "memberId": "testuser01"
+  },
+  "nickName": "테스트유저1",
+  "joinStaDate": "2025-04-20T10:00:00",
+  "joinEndDate": "2025-05-20T10:00:00",
+  "profileFileId": "none.jpg",
+  "teamSetYn": "Y",
+  "chkId": "admin",
+  "chkDate": "2025-05-05T12:00:00"
+}
+
+### Team Member 삭제 (Delete)
+DELETE http://localhost:8088/api/team-member/team1/testuser01
+
+### Week 생성 (Insert)
+POST http://localhost:8088/api/week
+Content-Type: application/json
+
+{
+  "weekId": {
+    "teamId": "team1",
+    "week": 1
+  },
+  "weekStaDate": "2025-04-29T00:00:00",
+  "weekEndDate": "2025-05-05T23:59:59",
+  "weekStaDayCd": "TUE",
+  "weekEndDayCd": "MON",
+  "vacationYn": "N",
+  "chkId": "admin",
+  "chkDate": "2025-05-05T12:00:00"
+}
+
+### Week 조회 (Select)
+GET http://localhost:8088/api/week/team1/1
+
+### Week 변경 (Update)
+PUT http://localhost:8088/api/week/team1/1
+Content-Type: application/json
+
+{
+  "weekId": {
+    "teamId": "team1",
+    "week": 1
+  },
+  "weekStaDate": "2025-04-29T00:00:00",
+  "weekEndDate": "2025-05-05T23:59:59",
+  "weekStaDayCd": "MON",
+  "weekEndDayCd": "SUN",
+  "vacationYn": "Y",
+  "chkId": "admin",
+  "chkDate": "2025-05-05T12:00:00"
+}
+
+### Week 삭제(Delete)
+DELETE http://localhost:8088/api/week/team1/1
+
+### WeekGoal 생성 (Insert)
+POST http://localhost:8088/api/weekgoal
+Content-Type: application/json
+
+{
+  "weekGoalId": {
+    "teamId": "team1",
+    "memberId": "testuser01",
+    "week": 1,
+    "goalNo": 1
+  },
+  "goal": "매일 5km 이상 달리기",
+  "orderSeq": 1,
+  "mainGoalYn": "Y",
+  "achieveStatusCd": "Y",
+  "feedback": "아직 2일밖에 못 했어요.",
+  "chkId": "admin",
+  "chkDate": "2025-05-05T12:00:00"
+}
+
+### WeekGoal 조회 (Select)
+GET http://localhost:8088/api/weekgoal/team1/testuser01/1/1
+
+### WeekGaol 변경 (Update)
+PUT http://localhost:8088/api/weekgoal/team1/testuser01/1/1
+Content-Type: application/json
+
+{
+  "weekGoalId": {
+    "teamId": "team1",
+    "memberId": "testuser01",
+    "week": 1,
+    "goalNo": 1
+  },
+  "goal": "매일 10km 이상 달리기",
+  "orderSeq": 2,
+  "mainGoalYn": "N",
+  "achieveStatusCd": "N",
+  "feedback": "아직 3일밖에 못 했어요.",
+  "chkId": "admin",
+  "chkDate": "2025-05-05T12:00:00"
+}
+
+### WeekGaol 삭제 (Delete)
+DELETE http://localhost:8088/api/weekgoal/team1/testuser01/1/1

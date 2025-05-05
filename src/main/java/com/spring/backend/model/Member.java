@@ -41,6 +41,7 @@ public class Member {
     @Column(name = "CHK_ID")
     private String chkId;      // 최종작업자
 
+    @Column(name = "CHK_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;      // 최종작업시간
 
