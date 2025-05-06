@@ -15,9 +15,9 @@ public class WeeklyDataGeneratorScheduler {
 
     /**
      * 주차 생성 스케줄러
-     *  - 매일 오전 7시에 실행
+     *  - 매일 오전 5시에 실행
      */
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 5 * * *", zone = "Asia/Seoul")
     public void generateWeeklyData() {
         log.info("📅 [Scheduler] 주차 데이터 생성 시작!");
 
