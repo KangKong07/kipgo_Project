@@ -87,19 +87,4 @@ public class Team {
     public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
-    public String getTeamId() {
-        return teamId;
-    }
-    public String getTeamNm() {
-        return teamNm;
-    }
-    public String getWeekStaDayCd() {
-        return weekStaDayCd;
-    }
-    public int getVacationLimit() {
-        return vacationLimit;
-    }
-    public String getPushUseYn() {
-        return pushUseYn;
-    }
 }
