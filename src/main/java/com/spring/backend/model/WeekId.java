@@ -22,7 +22,7 @@ public class WeekId implements Serializable {
         this.week = week;
     }
 
-    // * Getter/Setter
+    // [ Getter/Setter ]
     public String getTeamId() { return teamId; }
     public void setTeamId(String teamId) { this.teamId = teamId; }
 

@@ -22,7 +22,7 @@ public class TeamMemberId implements Serializable {
         this.memberId = memberId;
     }
 
-    // Getter, Setter
+    // [ Getter, Setter ]
     public String getTeamId() { return teamId; }
     public void setTeamId(String teamId) { this.teamId = teamId; }
 
