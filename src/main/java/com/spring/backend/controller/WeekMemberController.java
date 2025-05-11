@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,17 +47,19 @@ public class WeekMemberController {
                                              @RequestBody WeekMember weekMember) {
         WeekMemberId id = new WeekMemberId(teamId, memberId, week);
         return weekMemberService.findById(id)
-                .map(isExistingWeekMember -> {
-                    isExistingWeekMember.setVacationYn(weekMember.getVacationYn());
-                    isExistingWeekMember.setGoalRegYn(weekMember.getGoalRegYn());
-                    isExistingWeekMember.setFeedbackRegYn(weekMember.getFeedbackRegYn());
-                    isExistingWeekMember.setTotAchieveRate(weekMember.getTotAchieveRate());
-                    isExistingWeekMember.setComment(weekMember.getComment());
-                    isExistingWeekMember.setMainGoalUnmet(weekMember.getMainGoalUnmet());
-                    isExistingWeekMember.setChkId(weekMember.getChkId());
-                    isExistingWeekMember.setChkDate(weekMember.getChkDate());
+                .map(existingWeekMember -> {
+                    WeekMember updatedWeekMember = WeekMember.builder()
+                            .weekMemberId(existingWeekMember.getWeekMemberId())
+                            .goalRegYn(weekMember.getGoalRegYn())
+                            .feedbackRegYn(weekMember.getFeedbackRegYn())
+                            .totAchieveRate(weekMember.getTotAchieveRate())
+                            .comment(weekMember.getComment())
+                            .mainGoalUnmet(weekMember.getMainGoalUnmet())
+                            .chkId(weekMember.getChkId())
+                            .chkDate(new Date())
+                            .build();
 
-                    WeekMember savedWeekMember = weekMemberService.save(isExistingWeekMember);
+                    WeekMember savedWeekMember = weekMemberService.save(updatedWeekMember);
                     return ResponseEntity.ok(savedWeekMember);
                 })
                 .orElse(ResponseEntity.notFound().build());

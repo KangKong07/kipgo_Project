@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,16 +43,19 @@ public class TeamMemberController {
                                              @RequestBody TeamMember teamMember) {
         TeamMemberId id = new TeamMemberId(teamId, memberId);
         return teamMemberService.findById(id)
-                .map(isExistingTeamMember -> {
-                    isExistingTeamMember.setNickName(teamMember.getNickName());
-                    isExistingTeamMember.setJoinStaDate(teamMember.getJoinStaDate());
-                    isExistingTeamMember.setJoinEndDate(teamMember.getJoinEndDate());
-                    isExistingTeamMember.setProfileFileId(teamMember.getProfileFileId());
-                    isExistingTeamMember.setTeamSetYn(teamMember.getTeamSetYn());
-                    isExistingTeamMember.setChkId(teamMember.getChkId());
-                    isExistingTeamMember.setChkDate(teamMember.getChkDate());
+                .map(existingTeamMember -> {
+                    TeamMember updatedTeamMember = TeamMember.builder()
+                            .teamMemberId(existingTeamMember.getTeamMemberId())
+                            .nickName(teamMember.getNickName())
+                            .joinStaDate(teamMember.getJoinStaDate())
+                            .joinEndDate(teamMember.getJoinEndDate())
+                            .profileFileId(teamMember.getProfileFileId())
+                            .teamSetYn(teamMember.getTeamSetYn())
+                            .chkId(teamMember.getChkId())
+                            .chkDate(new Date())
+                            .build();
 
-                    TeamMember savedTeamMember = teamMemberService.save(isExistingTeamMember);
+                    TeamMember savedTeamMember = teamMemberService.save(updatedTeamMember);
                     return ResponseEntity.ok(savedTeamMember);
                 })
                 .orElse(ResponseEntity.notFound().build());

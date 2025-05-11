@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -43,15 +44,18 @@ public class WeekController {
         WeekId id = new WeekId(teamId, week);
         return weekService.findById(id)
                 .map(existingWeek -> {
-                    existingWeek.setWeekStaDate(weekRequest.getWeekStaDate());
-                    existingWeek.setWeekEndDate(weekRequest.getWeekEndDate());
-                    existingWeek.setWeekStaDayCd(weekRequest.getWeekStaDayCd());
-                    existingWeek.setWeekEndDayCd(weekRequest.getWeekEndDayCd());
-                    existingWeek.setVacationYn(weekRequest.getVacationYn());
-                    existingWeek.setChkId(weekRequest.getChkId());
-                    existingWeek.setChkDate(weekRequest.getChkDate());
+                    Week updatedWeek = Week.builder()
+                            .weekId(existingWeek.getWeekId())
+                            .weekStaDate(weekRequest.getWeekStaDate())
+                            .weekEndDate(weekRequest.getWeekEndDate())
+                            .weekStaDayCd(weekRequest.getWeekStaDayCd())
+                            .weekEndDayCd(weekRequest.getWeekEndDayCd())
+                            .vacationYn(weekRequest.getVacationYn())
+                            .chkId(weekRequest.getChkId())
+                            .chkDate(new Date())
+                            .build();
 
-                    Week savedWeek = weekService.save(existingWeek);
+                    Week savedWeek = weekService.save(updatedWeek);
                     return ResponseEntity.ok(savedWeek);
                 })
                 .orElse(ResponseEntity.notFound().build());

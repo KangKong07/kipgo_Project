@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,15 +39,20 @@ public class MemberController {
     public ResponseEntity<Member> update(@PathVariable String id, @RequestBody Member member) {
         return memberService.findById(id)
                 .map(existingMember -> {
-                    existingMember.setName(member.getName());
-                    existingMember.setTelNo(member.getTelNo());
-                    existingMember.setEmail(member.getEmail());
-                    existingMember.setMemberPwd(member.getMemberPwd());
-                    existingMember.setDeleteYn(member.getDeleteYn());
-                    existingMember.setChkDate(member.getChkDate());
+                    Member updatedMember = Member.builder()
+                            .memberId(existingMember.getMemberId())
+                            .name(member.getName())
+                            .telNo(member.getTelNo())
+                            .email(member.getEmail())
+                            .memberPwd(member.getMemberPwd())
+                            .deleteYn(member.getDeleteYn())
+                            .joinDate(existingMember.getJoinDate())
+                            .chkId(member.getChkId())
+                            .chkDate(new Date())
+                            .build();
 
-                    Member savedMember = memberService.save(existingMember);
-                    return ResponseEntity.ok(existingMember);
+                    Member savedMember = memberService.save(updatedMember);
+                    return ResponseEntity.ok(savedMember);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

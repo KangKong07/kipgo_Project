@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,21 +37,24 @@ public class TeamController {
     @PutMapping("/{id}")
     public ResponseEntity<Team> update(@PathVariable String id, @RequestBody Team team) {
         return teamService.findById(id)
-                .map(existingMember -> {
-                    existingMember.setTeamId(team.getTeamId());
-                    existingMember.setTeamNm(team.getTeamNm());
-                    existingMember.setWeekStaDayCd(team.getWeekStaDayCd());
-                    existingMember.setVacationLimit(team.getVacationLimit());
-                    existingMember.setPushUseYn(team.getPushUseYn());
-                    existingMember.setGoalRegDeadline(team.getGoalRegDeadline());
-                    existingMember.setFeedbackRegDeadline(team.getFeedbackRegDeadline());
-                    existingMember.setAdminId(team.getAdminId());
-                    existingMember.setStaDate(team.getStaDate());
-                    existingMember.setEndDate(team.getEndDate());
-                    existingMember.setChkDate(team.getChkDate());
+                .map(existingTeam -> {
+                    Team updatedTeam = Team.builder()
+                            .teamId(existingTeam.getTeamId())
+                            .teamNm(team.getTeamNm())
+                            .weekStaDayCd(team.getWeekStaDayCd())
+                            .vacationLimit(team.getVacationLimit())
+                            .pushUseYn(team.getPushUseYn())
+                            .goalRegDeadline(team.getGoalRegDeadline())
+                            .feedbackRegDeadline(team.getFeedbackRegDeadline())
+                            .adminId(team.getAdminId())
+                            .staDate(team.getStaDate())
+                            .endDate(team.getEndDate())
+                            .chkId(team.getChkId())
+                            .chkDate(new Date())
+                            .build();
 
-                    Team savedTeam = teamService.save(existingMember);
-                    return ResponseEntity.ok(existingMember);
+                    Team savedTeam = teamService.save(updatedTeam);
+                    return ResponseEntity.ok(savedTeam);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

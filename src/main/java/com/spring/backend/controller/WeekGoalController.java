@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -47,16 +48,18 @@ public class WeekGoalController {
                                                    @RequestBody WeekGoal weekGoal) {
         WeekGoalId id = new WeekGoalId(teamId, memberId, week, goalNo);
         return weekGoalService.findById(id)
-                .map(isExistingWeekGoal -> {
-                    isExistingWeekGoal.setGoal(weekGoal.getGoal());
-                    isExistingWeekGoal.setOrderSeq(weekGoal.getOrderSeq());
-                    isExistingWeekGoal.setMainGoalYn(weekGoal.getMainGoalYn());
-                    isExistingWeekGoal.setAchieveStatusCd(weekGoal.getAchieveStatusCd());
-                    isExistingWeekGoal.setFeedback(weekGoal.getFeedback());
-                    isExistingWeekGoal.setChkId(weekGoal.getChkId());
-                    isExistingWeekGoal.setChkDate(weekGoal.getChkDate());
+                .map(existingWeekGoal -> {
+                    WeekGoal updatedWeekGoal = WeekGoal.builder()
+                            .weekGoalId(existingWeekGoal.getWeekGoalId())
+                            .orderSeq(weekGoal.getOrderSeq())
+                            .mainGoalYn(weekGoal.getMainGoalYn())
+                            .achieveStatusCd(weekGoal.getAchieveStatusCd())
+                            .feedback(weekGoal.getFeedback())
+                            .chkId(weekGoal.getChkId())
+                            .chkDate(new Date())
+                            .build();
 
-                    WeekGoal savedWeekGoal = weekGoalService.save(isExistingWeekGoal);
+                    WeekGoal savedWeekGoal = weekGoalService.save(updatedWeekGoal);
                     return ResponseEntity.ok(savedWeekGoal);
                 })
                 .orElse(ResponseEntity.notFound().build());
