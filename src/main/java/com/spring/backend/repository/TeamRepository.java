@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface TeamRepository extends JpaRepository<Team, String> {
@@ -21,5 +21,5 @@ public interface TeamRepository extends JpaRepository<Team, String> {
           AND (:today >= COALESCE(t.staDate, :today))
           AND (t.endDate IS NULL OR :today < t.endDate)
     """)
-    List<Team> findByWeekStaDayCd(@Param("dayCode") String dayCode, @Param("today") LocalDate today);
+    List<Team> findByWeekStaDayCd(@Param("dayCode") String dayCode, @Param("today") Date today);
 }

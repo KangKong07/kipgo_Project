@@ -10,10 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import static com.spring.backend.common.util.DateUtils.*;
 
 @Slf4j
@@ -34,31 +37,41 @@ public class WeekSchedulerService {
      */
     @Transactional
     public void generateWeeklyForToday() {
-        String todayCode = LocalDate.now().getDayOfWeek().name();  // 예: "MON"
-        LocalDate today = LocalDate.now();
+        Date today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        String todayCode = LocalDate.now()
+                .getDayOfWeek()
+                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                .toUpperCase();  // ex) "SAT"
+
+        log.info("# 현재 일자 :: {} / 요일코드 :: {}", today, todayCode);
 
         // 1️⃣ 오늘 요일에 해당하는 팀 조회
         List<Team> targetTeams = teamRepository.findByWeekStaDayCd(todayCode, today);
-
         log.info("# 오늘 요일 [{}]에 해당하는 팀 수 :: {}", todayCode, targetTeams.size());
 
         for (Team team : targetTeams) {
             int nextWeekNo = getNextWeekNumber(team.getTeamId());
 
-            LocalDate weekStartDate = getWeekStartDate(team.getWeekStaDayCd());
+            // 주차 시작일자, 종료일자
+            LocalDate weekStartDate = LocalDate.now();
             LocalDate weekEndDate = weekStartDate.plusDays(6);
 
-            Date weekStartDateAsDate = toDate(weekStartDate.atStartOfDay());
+            // Date 타입으로 변환
+            Date weekStartDateAsDate = Date.from(
+                    weekStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
+            );
             Date weekEndDateAsDate = toDate(weekEndDate.atTime(23, 59, 59));
 
+            log.info("# weekStartDate :: {} / weekEndDate :: {} / weekStartDateAsDate :: {} / weekEndDateAsDate :: {}", weekStartDate, weekEndDate, weekStartDateAsDate, weekEndDateAsDate);
 
             // 2️⃣ 주차 데이터 생성
             Week week = Week.builder()
                     .weekId(new WeekId(team.getTeamId(), nextWeekNo))
                     .weekStaDate(weekStartDateAsDate)
                     .weekEndDate(weekEndDateAsDate)
-                    .weekStaDayCd(weekStartDate.getDayOfWeek().name())
-                    .weekEndDayCd(weekEndDate.getDayOfWeek().name())
+                    .weekStaDayCd(todayCode)
+                    .weekEndDayCd(weekEndDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                    .toUpperCase())
                     .vacationYn("N")
                     .chkId("system")
                     .chkDate(new Date())
@@ -69,8 +82,7 @@ public class WeekSchedulerService {
 
 
             // 3️⃣ 주차 참여자(팀원) 데이터 생성
-            List<TeamMember> targetMembers = teamMemberRepository.findValidMembersForWeek(team.getTeamId(), weekStartDate);
-            log.info("# 현재팀 참여자 수 :: {}명", targetMembers.size());
+            List<TeamMember> targetMembers = teamMemberRepository.findValidMembersForWeek(team.getTeamId(), weekStartDateAsDate);
 
             for (TeamMember member : targetMembers) {
                 WeekMemberId weekMemberId = new WeekMemberId(team.getTeamId(), member.getTeamMemberId().getMemberId(), nextWeekNo);
@@ -95,12 +107,6 @@ public class WeekSchedulerService {
 
     private int getNextWeekNumber(String teamId) {
         return weekRepository.findMaxWeekByTeamId(teamId).orElse(0) + 1;
-    }
-
-    private LocalDate getWeekStartDate(String startDayCd) {
-        DayOfWeek startDay = DayOfWeek.valueOf(startDayCd);
-        LocalDate today = LocalDate.now();
-        return today.with(startDay);
     }
 
 }
