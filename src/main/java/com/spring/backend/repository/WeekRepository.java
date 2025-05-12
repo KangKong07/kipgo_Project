@@ -21,7 +21,7 @@ public interface WeekRepository  extends JpaRepository<Week, WeekId> {
 
 
     /**
-     * 사용자 메인 - 최근 주차 정보 조회
+     * 사용자 메인 - 조회일 기준 최근 주차 정보 조회
      */
     @Query(value = """
         SELECT W.WEEK AS week
@@ -30,24 +30,20 @@ public interface WeekRepository  extends JpaRepository<Week, WeekId> {
                , CASE WHEN :today BETWEEN W.WEEK_STA_DATE AND W.WEEK_END_DATE THEN 'Y' ELSE 'N' END AS isCurrent
                , COALESCE(PREV_WM.FEEDBACK_REG_YN, '') AS isFeedbackReg
           FROM WEEK W
-          JOIN WEEK_MEMBER WM
-            ON WM.TEAM_ID = W.TEAM_ID
-           AND WM.WEEK = W.WEEK
-           AND WM.MEMBER_ID = :memberId
      LEFT JOIN WEEK_MEMBER PREV_WM
             ON PREV_WM.TEAM_ID = W.TEAM_ID
            AND PREV_WM.WEEK = W.WEEK - 1
            AND PREV_WM.MEMBER_ID = :memberId
          WHERE W.TEAM_ID = :teamId
            AND (
-                (:today BETWEEN W.WEEK_STA_DATE AND W.WEEK_END_DATE)
-                OR W.WEEK_END_DATE < :today
+                (:searchDate BETWEEN W.WEEK_STA_DATE AND W.WEEK_END_DATE)
+                OR W.WEEK_END_DATE < :searchDate
               )
-      ORDER BY CASE WHEN :today BETWEEN W.WEEK_STA_DATE AND W.WEEK_END_DATE THEN 0 ELSE 1 END
+      ORDER BY CASE WHEN :searchDate BETWEEN W.WEEK_STA_DATE AND W.WEEK_END_DATE THEN 0 ELSE 1 END
                , W.WEEK_END_DATE DESC
      FETCH FIRST 1 ROWS ONLY
     """, nativeQuery = true)
-    Optional<UserMainWeekInfoDto> fintUserMainWeekInfo(@Param("teamId") String teamId, @Param("memberId") String memberId, @Param("today") Date today);
+    Optional<UserMainWeekInfoDto> fintUserMainWeekInfo(@Param("teamId") String teamId, @Param("memberId") String memberId, @Param("today") Date today, @Param("searchDate") Date searchDate);
 
 }
 
