@@ -28,38 +28,4 @@ public class BackendApplication // implements CommandLineRunner
 //        app.run(args);
     }
 
-//    @Override
-//    public void run(String... args) throws Exception {
-//        EntityManager em  = emf.createEntityManager();
-//        EntityTransaction tx = em.getTransaction();
-//
-//        tx.begin();
-//
-//        try {
-//            Member existing = em.find(Member.class, "rudgns3456");
-//            if (existing != null) {
-//                em.remove(existing); // 테스트용일 경우 삭제
-//            }
-//
-//            Member member = new Member();
-//            member.setMEMBER_ID("rudgns3456");
-//            member.setMEMBER_PWD("1234");
-//            member.setEMAIL("rudgns1234@gmail.com");
-//            member.setNAME("강콩");
-//            member.setCHK_ID("admin");
-//            member.setDELETE_YN("N");
-//            member.setJOIN_DATE(new Date());
-//            member.setCHK_DATE(new Date());
-//            member.setTEL_NO("010-1234-5678");
-//
-//            em.persist(member);
-//            tx.commit();
-//
-//        } catch (Exception e) {
-//            tx.rollback();
-//            e.printStackTrace();
-//        } finally {
-//            em.close();
-//        }
-//    }
 }
