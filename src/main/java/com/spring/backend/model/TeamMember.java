@@ -40,6 +40,9 @@ public class TeamMember {
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;          // 최종작업시간
 
+    @Column(name = "MEMBER_VACATION_LIMIT")
+    private int memberVacationLimit;    // 멤버 휴가 잔여 일수
+
 
     /* [ setter ] */
     public void setNickName(String nickName) {
@@ -68,5 +71,13 @@ public class TeamMember {
 
     public void setChkDate(Date chkDate) {
         this.chkDate = chkDate;
+    }
+
+    // 휴가 제한 일수 차감 메서드
+    public void decreaseVacationLimit() {
+        if (memberVacationLimit <= 0) {
+            throw new IllegalStateException("현재 잔여 휴가가 없습니다.");
+        }
+        this.memberVacationLimit--;
     }
 }

@@ -43,6 +43,9 @@ public class Member {
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;      // 최종작업시간
 
+    @Column(name = "MAIN_TEAMID")
+    private String mainTeamId;  // 대표팀 ID
+
 
     /* [ setter ] */
     public void setName(String name) {
