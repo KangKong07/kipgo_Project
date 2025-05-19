@@ -1,6 +1,7 @@
 package com.spring.backend.repository;
 
 import com.spring.backend.dto.response.UserMainWeekInfoDto;
+import com.spring.backend.dto.response.WeekInfoDto;
 import com.spring.backend.model.Week;
 import com.spring.backend.model.WeekId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface WeekRepository  extends JpaRepository<Week, WeekId> {
@@ -44,6 +46,24 @@ public interface WeekRepository  extends JpaRepository<Week, WeekId> {
      FETCH FIRST 1 ROWS ONLY
     """, nativeQuery = true)
     Optional<UserMainWeekInfoDto> fintUserMainWeekInfo(@Param("teamId") String teamId, @Param("memberId") String memberId, @Param("today") Date today, @Param("searchDate") Date searchDate);
+
+
+
+    /**
+     * 현재 참여중인 팀 내 주차 목록 조회
+     */
+    @Query(value = """
+        SELECT W.WEEK AS week -- 주차
+             , W.WEEK_STA_DATE AS weekStaDate -- 주차시작일자
+             , W.WEEK_END_DATE AS weekEndDate -- 주차종료일자
+             , W.VACATION_YN AS vacationYn -- 전체휴가여부
+        FROM WEEK W
+        INNER JOIN WEEK_MEMBER WM
+        ON W.TEAM_ID = WM.TEAM_ID AND W.WEEK = WM.WEEK
+        WHERE W.TEAM_ID = :teamId AND WM.MEMBER_ID = :memberId
+        ORDER BY W.WEEK DESC
+    """, nativeQuery = true)
+    List<WeekInfoDto> findWeekListInfo(@Param("teamId") String teamId, @Param("memberId") String memberId);
 
 }
 
