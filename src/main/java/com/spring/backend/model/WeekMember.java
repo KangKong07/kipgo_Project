@@ -7,7 +7,7 @@ import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Entity
 @Table(name = "WEEK_MEMBER")
