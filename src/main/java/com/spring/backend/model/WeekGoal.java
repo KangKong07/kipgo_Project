@@ -38,6 +38,25 @@ public class WeekGoal {
     @Temporal(TemporalType.TIMESTAMP)
     private Date chkDate;
 
+    public WeekGoal(String teamId,
+                    String memberId,
+                    int week,
+                    int goalNo,
+                    String goal,
+                    int orderSeq,
+                    String mainGoalYn,
+                    String achieveStatusCd,
+                    String feedback,
+                    Date goalChkDate) {
+        weekGoalId = new WeekGoalId(teamId, memberId, week, goalNo);
+        this.goal = goal;
+        this.orderSeq = orderSeq;
+        this.mainGoalYn = mainGoalYn;
+        this.achieveStatusCd = achieveStatusCd;
+        this.feedback = feedback;
+        this.chkDate = goalChkDate;
+    }
+
 
     /* [ setter ] */
     public void setGoal(String goal) {
