@@ -1,14 +1,13 @@
 package com.spring.backend.controller;
 
-import com.spring.backend.model.Member;
+import com.spring.backend.common.response.ApiResponse;
+import com.spring.backend.dto.request.RegisterRequest;
 import com.spring.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/member")
@@ -17,49 +16,24 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping
-    public List<Member> findAll() {
-        return memberService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Member> getMember(@PathVariable String id) {
-        return memberService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<Member> create(@RequestBody Member member) {
-        Member savedMember = memberService.save(member);
-        return ResponseEntity.ok(savedMember);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Member> update(@PathVariable String id, @RequestBody Member member) {
-        return memberService.findById(id)
-                .map(existingMember -> {
-                    Member updatedMember = Member.builder()
-                            .memberId(existingMember.getMemberId())
-                            .name(member.getName())
-                            .telNo(member.getTelNo())
-                            .email(member.getEmail())
-                            .memberPwd(member.getMemberPwd())
-                            .deleteYn(member.getDeleteYn())
-                            .joinDate(existingMember.getJoinDate())
-                            .chkId(member.getChkId())
-                            .chkDate(new Date())
-                            .build();
-
-                    Member savedMember = memberService.save(updatedMember);
-                    return ResponseEntity.ok(savedMember);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Member> deleteMeber(@PathVariable String id) {
-        memberService.deleteById(id);
-        return ResponseEntity.ok().build();
+    /**
+     * 회원가입
+     * @param reqMember 회원가입 요청 정보
+     * @return ApiResponse 처리상태, 성공 또는 실패 메시지
+     */
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<?>> registerMember(@RequestBody RegisterRequest reqMember) {
+        try {
+            memberService.registerMember(reqMember);    // 회원가입 처리 호출
+            return ResponseEntity.ok(ApiResponse.success("회원가입 성공"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("회원가입 중 알 수 없는 오류 발생"));
+        }
     }
 }
