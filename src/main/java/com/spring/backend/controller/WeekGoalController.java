@@ -23,16 +23,16 @@ public class WeekGoalController {
         return weekGoalService.findAll();
     }
 
-    @GetMapping("/{teamId}/{memberId}/{week}/{goalNo}")
-    public ResponseEntity<WeekGoal> findById(@PathVariable String teamId,
-                                             @PathVariable String memberId,
-                                             @PathVariable int week,
-                                             @PathVariable int goalNo) {
-        WeekGoalId id = new WeekGoalId(teamId, memberId, week, goalNo);
-        return weekGoalService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+//    @GetMapping("/{teamId}/{memberId}/{week}/{goalNo}")
+//    public ResponseEntity<WeekGoal> findById(@PathVariable String teamId,
+//                                             @PathVariable String memberId,
+//                                             @PathVariable int week,
+//                                             @PathVariable int goalNo) {
+//        WeekGoalId id = new WeekGoalId(teamId, memberId, week, goalNo);
+//        return weekGoalService.findById(id)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.notFound().build());
+//    }
 
     @PostMapping
     public ResponseEntity<WeekGoal> createWeekGoal(@RequestBody WeekGoal weekGoal) {
@@ -40,30 +40,30 @@ public class WeekGoalController {
         return ResponseEntity.ok(createdWeekGoal);
     }
 
-    @PutMapping("/{teamId}/{memberId}/{week}/{goalNo}")
-    public ResponseEntity<WeekGoal> updateWeekGoal(@PathVariable String teamId,
-                                                   @PathVariable String memberId,
-                                                   @PathVariable int week,
-                                                   @PathVariable int goalNo,
-                                                   @RequestBody WeekGoal weekGoal) {
-        WeekGoalId id = new WeekGoalId(teamId, memberId, week, goalNo);
-        return weekGoalService.findById(id)
-                .map(existingWeekGoal -> {
-                    WeekGoal updatedWeekGoal = WeekGoal.builder()
-                            .weekGoalId(existingWeekGoal.getWeekGoalId())
-                            .orderSeq(weekGoal.getOrderSeq())
-                            .mainGoalYn(weekGoal.getMainGoalYn())
-                            .achieveStatusCd(weekGoal.getAchieveStatusCd())
-                            .feedback(weekGoal.getFeedback())
-                            .chkId(weekGoal.getChkId())
-                            .chkDate(new Date())
-                            .build();
-
-                    WeekGoal savedWeekGoal = weekGoalService.save(updatedWeekGoal);
-                    return ResponseEntity.ok(savedWeekGoal);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
+//    @PutMapping("/{teamId}/{memberId}/{week}/{goalNo}")
+//    public ResponseEntity<WeekGoal> updateWeekGoal(@PathVariable String teamId,
+//                                                   @PathVariable String memberId,
+//                                                   @PathVariable int week,
+//                                                   @PathVariable int goalNo,
+//                                                   @RequestBody WeekGoal weekGoal) {
+//        WeekGoalId id = new WeekGoalId(teamId, memberId, week, goalNo);
+//        return weekGoalService.findById(id)
+//                .map(existingWeekGoal -> {
+//                    WeekGoal updatedWeekGoal = WeekGoal.builder()
+//                            .weekGoalId(existingWeekGoal.getWeekGoalId())
+//                            .orderSeq(weekGoal.getOrderSeq())
+//                            .mainGoalYn(weekGoal.getMainGoalYn())
+//                            .achieveStatusCd(weekGoal.getAchieveStatusCd())
+//                            .feedback(weekGoal.getFeedback())
+//                            .chkId(weekGoal.getChkId())
+//                            .chkDate(new Date())
+//                            .build();
+//
+//                    WeekGoal savedWeekGoal = weekGoalService.save(updatedWeekGoal);
+//                    return ResponseEntity.ok(savedWeekGoal);
+//                })
+//                .orElse(ResponseEntity.notFound().build());
+//    }
 
     @DeleteMapping("/{teamId}/{memberId}/{week}/{goalNo}")
     public ResponseEntity<Void> delete(@PathVariable String teamId,
