@@ -6,6 +6,7 @@ import com.spring.backend.dto.response.WeekGoalInfoDto;
 import com.spring.backend.model.*;
 import com.spring.backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WeekGoalService {
 
     private final WeekGoalRepository weekGoalRepository;
@@ -195,6 +197,92 @@ public class WeekGoalService {
         } catch (Exception e) {
             return ApiResponse.failure("주간 목표 삭제 중 예기치 못한 오류가 발생했습니다." + e.getMessage());
         }
+    }
+
+    /*
+    * 주간 목표에 대한 피드백 저장 후, 피드백 바로 리턴
+    */
+    @Transactional
+    public ApiResponse<List<WeekGoalInfoDto>> saveFeedback(String teamId, String memberId, int week, List<WeekGoal> weekGoalList) {
+        try {
+            // 1. 팀원 검증
+            TeamMember searchTeamMember = teamMemberRepository.findById(new TeamMemberId(teamId, memberId))
+                    .orElseThrow(() -> new NoSuchElementException("팀원 정보가 존재하지 않습니다."));
+
+            // 2. 팀 정보 조회
+            Team team = teamRepository.findById(teamId)
+                    .orElseThrow(() -> new NoSuchElementException("팀 정보를 찾을 수 없습니다."));
+
+            // 3. 이번 주차 참여 여부 검증
+            WeekMemberId weekMemberId = new WeekMemberId(teamId, memberId, week);
+            WeekMember weekMember = weekMemberRepository.findById(weekMemberId)
+                    .orElseThrow(() -> new NoSuchElementException("해당 주차의 참여 정보를 찾을 수 없습니다."));
+
+            // 4. 피드백 작성 기한 검증 - 주차 마지막날로 기한 검증
+            Week weekEntity = weekRepository.findById(new WeekId(teamId, week))
+                    .orElseThrow(() -> new NoSuchElementException("해당 주차 정보를 찾을 수 없습니다."));
+            validationUtils.validateGoalDeadline(weekEntity.getWeekEndDate(), team.getFeedbackRegDeadline());
+
+            // 4. 피드백 리스트 저장
+            if(weekGoalList != null && !weekGoalList.isEmpty()) {
+                weekGoalRepository.saveAll(weekGoalList);
+
+                // 5. WeekMember 업데이트 진행 - 총달성률/메인목표달성/피드백작성여부
+                // 5.1. 총 달성률 계산
+                float totAchieveRate = getTotAchieveRate(teamId, memberId, week, weekGoalList);
+
+                // 5.2. 메인 목표 달성 여부
+                String mainGoalUnmet = isMainGoalUnmet(teamId, memberId, week, weekGoalList) ? "Y" : "N";
+
+                weekMemberService.save(weekMember.toBuilder()
+                        .feedbackRegYn("Y")
+                        .totAchieveRate(totAchieveRate)
+                        .mainGoalUnmet(mainGoalUnmet)
+                        .chkId(memberId)
+                        .chkDate(new Date())
+                        .build());
+
+                // 6. 작성된 피드백 정보 포함하여 WeekGoalDto 리턴
+                List<WeekGoalInfoDto> goalInfoList = weekGoalRepository.getWeekGoals(teamId, memberId, week);
+                return ApiResponse.success("목표 저장 및 조회 성공", goalInfoList);
+            } else {
+                throw new IllegalArgumentException("현재 주차에 작성된 피드백 정보를 찾을 수 없습니다.");
+            }
+
+        } catch (Exception e) {
+            log.error("피드백 저장 중 오류 발생", e);
+            return ApiResponse.failure("주간 피드백 저장 중 오류가 발생했습니다. 관리자에게 문의해주세요.");
+        }
+    }
+
+    private float getTotAchieveRate(String teamId, String memberId, int week ,List<WeekGoal> weekGoalList) {
+
+        int weekGoalCount = weekGoalList.size();    // 전체 목표 수
+        int weekGoalAchieveCount = weekGoalRepository.getWeekGoalAchieveCnt(teamId, memberId, week);    // 달성한 목표 수
+
+        if (weekGoalCount == 0) {
+            return 0;
+        }
+
+        return ((float) weekGoalAchieveCount / weekGoalCount) * 100;
+    }
+
+    /**
+     * 메인목표 달성여부 체크 로직
+     */
+    private boolean isMainGoalUnmet(String teamId, String memberId, int week, List<WeekGoal> weekGoalList) {
+        boolean mainGoalUnmet = false;
+
+        if(weekGoalList != null && !weekGoalList.isEmpty()) {
+            for (WeekGoal weekGoal : weekGoalList) {
+                if("Y".equals(weekGoal.getMainGoalYn()) && "S".equals(weekGoal.getAchieveStatusCd())) {
+                    mainGoalUnmet = true;
+                    break;
+                }
+            }
+        }
+
+        return mainGoalUnmet;
     }
 
 

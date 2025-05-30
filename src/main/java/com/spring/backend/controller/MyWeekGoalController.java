@@ -72,4 +72,24 @@ public class MyWeekGoalController {
             return ResponseEntity.badRequest().body(result);
         }
     }
+
+    @PostMapping("/feedback/save")
+    public ResponseEntity<ApiResponse<List<WeekGoalInfoDto>>> saveFeedback(@PathVariable int week,
+                                                                     @RequestBody List<WeekGoal> weekGoalList,
+                                                                     HttpSession httpSession) {
+        String teamId = (String) httpSession.getAttribute("teamId");
+        String memberId = (String) httpSession.getAttribute("memberId");
+
+        if (teamId == null || memberId == null) {
+            ApiResponse<List<WeekGoalInfoDto>> response = ApiResponse.failure("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        ApiResponse<List<WeekGoalInfoDto>> result = weekGoalService.saveFeedback(teamId, memberId, week, weekGoalList);
+        if ("success".equals(result.getStatus())) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 }

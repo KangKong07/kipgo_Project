@@ -50,4 +50,20 @@ public interface WeekGoalRepository extends JpaRepository<WeekGoal, WeekGoalId> 
                                        @Param("memberId") String memberId,
                                        @Param("week") int week);
 
+    /**
+     * 현재 주차 참여중인 목표 리스트 중 달성한 리스트 카운트 조회
+     *
+    */
+    @Query(value = """
+            SELECT COUNT(0) AS WeekGoalAchieveCnt FROM kipgo.WEEK W
+            INNER JOIN kipgo.WEEK_MEMBER WM ON W.WEEK = WM.WEEK AND W.TEAM_ID = WM.TEAM_ID
+            INNER JOIN kipgo.WEEK_GOAL WG on W.WEEK = WG.WEEK AND W.TEAM_ID = WG.TEAM_ID AND WM.MEMBER_ID = WG.MEMBER_ID
+            WHERE W.WEEK = :week
+            AND W.TEAM_ID = :teamId
+            AND WM.MEMBER_ID = :memberId
+            AND WG.ACHIEVE_STATUS_CD = 'Y'
+        """, nativeQuery = true)
+    Integer getWeekGoalAchieveCnt(@Param("teamId") String teamId,
+                               @Param("memberId") String memberId,
+                               @Param("week") int week);
 }

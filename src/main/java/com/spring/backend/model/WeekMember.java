@@ -26,7 +26,7 @@ public class WeekMember {
     private String feedbackRegYn; // 피드백작성여부
 
     @Column(name = "TOT_ACHIEVE_RATE")
-    private int totAchieveRate;   // 총달성률
+    private float totAchieveRate;   // 총달성률
 
     @Column(name = "COMMENT")
     private String comment;         // 총평
