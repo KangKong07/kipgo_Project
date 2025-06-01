@@ -1,5 +1,6 @@
 package com.spring.backend.controller;
 
+import com.spring.backend.common.util.JwtUtil;
 import com.spring.backend.dto.response.ApiResponse;
 import com.spring.backend.dto.response.WeekGoalInfoDto;
 import com.spring.backend.model.WeekGoal;
@@ -17,13 +18,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyWeekGoalController {
 
+    private final JwtUtil jwtUtil;
     private final WeekGoalService weekGoalService;
 
     @GetMapping("/goal-feedback/{week}")
     public ResponseEntity<List<WeekGoalInfoDto>> getMyWeekGoalFeedBack(@PathVariable int week,
-                                                                 HttpSession httpSession) {
-        String teamId = (String) httpSession.getAttribute("teamId");
-        String memberId = (String) httpSession.getAttribute("memberId");
+                                                                       @RequestHeader("Authorization") String authHeader) {
+
+        // *********** [!] 아래와 같이 수정해주세요 ----> ************************************
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
+        // *****************************************************************************
 
         if (teamId == null || memberId == null) {
             throw new IllegalStateException("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
