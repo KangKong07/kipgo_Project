@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://158.247.202.97:3306/kipgo
+    username: kipgo_user
+    password: __REPLACE_WITH_OUR_LOCAL_PASSWORD__
+
+jwt:
+  secret: __REPLACE_WITH_OUR_JWT_SECRET__
+

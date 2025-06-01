@@ -1,0 +1,9 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: backend
+
+  profiles:
+    active: dev  # ← 현재 활성화할 프로파일 (dev or prod)
