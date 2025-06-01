@@ -42,7 +42,7 @@ public class AuthService {
         }
 
         // 4. JWT 토큰 생성
-        String token = jwtUtil.generateToken(member.getMemberId());
+        String token = jwtUtil.generateToken(member);
 
         return new LoginResponse(token, member);
     }
