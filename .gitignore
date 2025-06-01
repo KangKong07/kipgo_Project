@@ -5,6 +5,12 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+# Environment files
+.env
+application-dev.yml
+application-prod.yml
+application-local.yml
+
 ### STS ###
 .apt_generated
 .classpath
