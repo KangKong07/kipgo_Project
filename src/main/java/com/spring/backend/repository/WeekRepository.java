@@ -53,10 +53,11 @@ public interface WeekRepository  extends JpaRepository<Week, WeekId> {
      * 현재 참여중인 팀 내 주차 목록 조회
      */
     @Query(value = """
-        SELECT W.WEEK AS week -- 주차
-             , W.WEEK_STA_DATE AS weekStaDate -- 주차시작일자
-             , W.WEEK_END_DATE AS weekEndDate -- 주차종료일자
-             , W.VACATION_YN AS vacationYn -- 전체휴가여부
+        SELECT W.WEEK           AS week -- 주차
+             , W.WEEK_STA_DATE  AS weekStaDate -- 주차시작일자
+             , W.WEEK_END_DATE  AS weekEndDate -- 주차종료일자
+             , W.VACATION_YN    AS vacationYn -- 전체휴가여부
+             , WM.VACATION_YN   AS memberVacationYn -- 회원 휴가 여부
         FROM WEEK W
         INNER JOIN WEEK_MEMBER WM
         ON W.TEAM_ID = WM.TEAM_ID AND W.WEEK = WM.WEEK
