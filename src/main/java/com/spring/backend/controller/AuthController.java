@@ -28,8 +28,8 @@ public class AuthController {
      * @return 로그인 응답 정보 (JWT 토큰 포함)
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
+    public ResponseEntity<ApiResponse<LoginResponse>>  login(@RequestBody LoginRequest request) {
+        ApiResponse<LoginResponse> response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 

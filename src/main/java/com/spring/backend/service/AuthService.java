@@ -1,5 +1,8 @@
 package com.spring.backend.service;
 
+import com.spring.backend.common.exception.LoginFailedException;
+import com.spring.backend.common.exception.UserNotFoundException;
+import com.spring.backend.common.response.ApiResponse;
 import com.spring.backend.common.util.JwtUtil;
 import com.spring.backend.dto.request.LoginRequest;
 import com.spring.backend.dto.request.RegisterRequest;
@@ -25,26 +28,29 @@ public class AuthService {
      * @param request 로그인 요청 정보
      * @return 로그인 응답 정보 (JWT 토큰 포함)
      */
-    public LoginResponse login(LoginRequest request) {
+    public ApiResponse<LoginResponse>  login(LoginRequest request) {
 
         // 1. 회원ID로 회원 정보 조회(+존재여부체크)
         Member member = memberRepository.findByMemberId(request.getMemberId())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
 
         // 2. 비밀번호 일치 여부 확인
         if (!passwordEncoder.matches(request.getMemberPwd(), member.getMemberPwd())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new LoginFailedException("비밀번호가 일치하지 않습니다.");
         }
 
         // 3. 탈퇴 여부 확인
         if ("Y".equalsIgnoreCase(member.getDeleteYn())) {
-            throw new RuntimeException("현재 존재하지 않는 회원입니다.");    // 탈퇴한 회원입니다.
+            throw new LoginFailedException("현재 존재하지 않는 회원입니다.");    // 탈퇴한 회원입니다.
         }
 
         // 4. JWT 토큰 생성
         String token = jwtUtil.generateToken(member);
 
-        return new LoginResponse(token, member);
+
+        LoginResponse response = new LoginResponse(token, member);
+
+        return ApiResponse.ok(response);
     }
 
 
