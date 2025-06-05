@@ -1,19 +1,19 @@
 package com.spring.backend.controller;
 
+import com.spring.backend.common.exception.UserNotFoundException;
+import com.spring.backend.common.util.JwtUtil;
 import com.spring.backend.dto.response.UserMainWeekInfoDto;
 import com.spring.backend.service.UserMainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/main")
 public class UserMainController {
 
+    private final JwtUtil jwtUtil;
     private final UserMainService userMainService;
 
     /*
@@ -23,9 +23,17 @@ public class UserMainController {
      */
     @GetMapping("/week-info")
     public ResponseEntity<UserMainWeekInfoDto> getUserMainWeekInfo(
-            @RequestParam String teamId,
-            @RequestParam String memberId
+            @RequestHeader("Authorization") String authHeader
     ) {
+
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
+
+        if (teamId == null || memberId == null) {
+            throw new UserNotFoundException("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
+        }
+
         return ResponseEntity.ok(userMainService.getUserMainWeekInfo(teamId, memberId));
     }
 
