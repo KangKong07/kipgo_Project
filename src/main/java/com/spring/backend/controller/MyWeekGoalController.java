@@ -41,9 +41,10 @@ public class MyWeekGoalController {
     @PostMapping("/goal/save/{week}")
     public ResponseEntity<ApiResponse<List<WeekGoalInfoDto>>> saveMyWeekGoal(@PathVariable int week,
                                                                              @RequestBody List<WeekGoal> weekGoalList,
-                                                                             HttpSession httpSession) {
-        String teamId = (String) httpSession.getAttribute("teamId");
-        String memberId = (String) httpSession.getAttribute("memberId");
+                                                                             @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
 
         if (teamId == null || memberId == null) {
             ApiResponse<List<WeekGoalInfoDto>> response = ApiResponse.failure("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
@@ -62,9 +63,10 @@ public class MyWeekGoalController {
     @DeleteMapping("/goal/delete/{week}/{goalno}")
     public ResponseEntity<ApiResponse<List<WeekGoalInfoDto>>> deleteMyWeekGoal(@PathVariable int week,
                                                                                @PathVariable int goalno,
-                                                                               HttpSession httpSession) {
-        String teamId = (String) httpSession.getAttribute("teamId");
-        String memberId = (String) httpSession.getAttribute("memberId");
+                                                                               @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
 
         if (teamId == null || memberId == null) {
             ApiResponse<List<WeekGoalInfoDto>> response = ApiResponse.failure("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
@@ -81,10 +83,11 @@ public class MyWeekGoalController {
 
     @PostMapping("/feedback/save")
     public ResponseEntity<ApiResponse<List<WeekGoalInfoDto>>> saveFeedback(@PathVariable int week,
-                                                                     @RequestBody List<WeekGoal> weekGoalList,
-                                                                     HttpSession httpSession) {
-        String teamId = (String) httpSession.getAttribute("teamId");
-        String memberId = (String) httpSession.getAttribute("memberId");
+                                                                           @RequestBody List<WeekGoal> weekGoalList,
+                                                                           @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
 
         if (teamId == null || memberId == null) {
             ApiResponse<List<WeekGoalInfoDto>> response = ApiResponse.failure("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");

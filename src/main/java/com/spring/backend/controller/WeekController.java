@@ -1,5 +1,6 @@
 package com.spring.backend.controller;
 
+import com.spring.backend.common.util.JwtUtil;
 import com.spring.backend.dto.response.WeekInfoDto;
 import com.spring.backend.model.Week;
 import com.spring.backend.model.WeekId;
@@ -19,15 +20,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WeekController {
 
+    private final JwtUtil jwtUtil;
     private final WeekService weekService;
 
     /*
      * 참여하는 팀 내 주차 목록 리스트 조회
      */
     @GetMapping("/week-list")
-    public ResponseEntity<List<WeekInfoDto>> getWeekListInfo(HttpSession httpSession) {
-        String teamId = (String) httpSession.getAttribute("teamId");
-        String memberId = (String) httpSession.getAttribute("memberId");
+    public ResponseEntity<List<WeekInfoDto>> getWeekListInfo(@RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
 
         if (teamId == null || memberId == null) {
             throw new IllegalStateException("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
@@ -42,9 +46,11 @@ public class WeekController {
      */
     @PutMapping("/vacation/save")
     public ResponseEntity<WeekMember> saveVacation(@RequestBody Week week,
-                                                   HttpSession httpSession) {
-        String teamId = (String) httpSession.getAttribute("teamId");
-        String memberId = (String) httpSession.getAttribute("memberId");
+                                                   @RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
 
         if (teamId == null || memberId == null) {
             throw new IllegalStateException("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
