@@ -34,7 +34,7 @@ public class JwtUtil {
      */
     public String generateToken(Member member) {
         long now = System.currentTimeMillis();
-        long expiration = 1000 * 60 * 60 * 24; // 24시간
+        long expiration = 1000 * 60 * 60 * 1; // 1시간(임시, 추후 refreshToken 적용 시 15분으로 변경예정)
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("teamId", member.getMainTeamId());

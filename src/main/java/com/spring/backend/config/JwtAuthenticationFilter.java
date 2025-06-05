@@ -32,7 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7); // "Bearer " 제거
-            if (jwtUtil.validateToken(token)) {
+
+            if (token == null || !jwtUtil.validateToken(token)) {   // ** 토큰이 없거나 유효하지 않은 경우
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);     // 401
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"토큰이 유효하지 않거나 만료되었습니다.\"}");
+                return;
+            }
+            else {  // ** 토큰이 유효한 경우
                 String memberId = jwtUtil.getMemberIdFromToken(token);
 
                 // * Spring Security 인증 정보 설정
