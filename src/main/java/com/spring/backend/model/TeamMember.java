@@ -17,7 +17,7 @@ public class TeamMember {
     private TeamMemberId teamMemberId;         // 복합키 클래스(팀ID, 회원ID)
 
     @Column(name = "NICKNAME")
-    private String nickName;        // 팀내 별명
+    private String nickname;        // 팀내 별명
 
     @Column(name = "JOIN_STA_DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -45,8 +45,8 @@ public class TeamMember {
 
 
     /* [ setter ] */
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setJoinStaDate(Date joinStaDate) {

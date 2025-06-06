@@ -46,7 +46,7 @@ public class TeamMemberController {
                 .map(existingTeamMember -> {
                     TeamMember updatedTeamMember = TeamMember.builder()
                             .teamMemberId(existingTeamMember.getTeamMemberId())
-                            .nickName(teamMember.getNickName())
+                            .nickname(teamMember.getNickname())
                             .joinStaDate(teamMember.getJoinStaDate())
                             .joinEndDate(teamMember.getJoinEndDate())
                             .profileFileId(teamMember.getProfileFileId())
