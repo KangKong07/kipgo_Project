@@ -4,10 +4,12 @@ import com.spring.backend.common.exception.LoginFailedException;
 import com.spring.backend.common.exception.UserNotFoundException;
 import com.spring.backend.common.response.ApiResponse;
 import com.spring.backend.common.util.JwtUtil;
+import com.spring.backend.dto.projection.LoginTeamInfoProjection;
 import com.spring.backend.dto.request.LoginRequest;
 import com.spring.backend.dto.request.RegisterRequest;
 import com.spring.backend.dto.response.LoginResponse;
 import com.spring.backend.model.Member;
+import com.spring.backend.repository.LoginRepository;
 import com.spring.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,8 @@ import java.util.Date;
 public class AuthService {
 
     private final MemberRepository memberRepository;
+    private final LoginRepository loginRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -28,7 +32,7 @@ public class AuthService {
      * @param request 로그인 요청 정보
      * @return 로그인 응답 정보 (JWT 토큰 포함)
      */
-    public ApiResponse<LoginResponse>  login(LoginRequest request) {
+    public ApiResponse<LoginResponse> login(LoginRequest request) {
 
         // 1. 회원ID로 회원 정보 조회(+존재여부체크)
         Member member = memberRepository.findByMemberId(request.getMemberId())
@@ -47,8 +51,12 @@ public class AuthService {
         // 4. JWT 토큰 생성
         String token = jwtUtil.generateToken(member);
 
+        // 5. 팀정보 추가조회
+        LoginTeamInfoProjection mainTeamInfo = loginRepository.findLoginTeamInfo(member.getMainTeamId(), member.getMemberId());
+        System.out.println("### mainTeamInfo :: " + mainTeamInfo);
 
-        LoginResponse response = new LoginResponse(token, member);
+        LoginResponse response = new LoginResponse(token, member, mainTeamInfo);
+        System.out.println("### login ok member :: " + member);
 
         return ApiResponse.ok(response);
     }
