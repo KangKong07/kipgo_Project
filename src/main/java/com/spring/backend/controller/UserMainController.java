@@ -2,11 +2,15 @@ package com.spring.backend.controller;
 
 import com.spring.backend.common.exception.UserNotFoundException;
 import com.spring.backend.common.util.JwtUtil;
+import com.spring.backend.dto.response.UserMainTeamInfoDto;
 import com.spring.backend.dto.response.UserMainWeekInfoDto;
+import com.spring.backend.dto.response.WeekInfoDto;
 import com.spring.backend.service.UserMainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,4 +41,17 @@ public class UserMainController {
         return ResponseEntity.ok(userMainService.getUserMainWeekInfo(teamId, memberId));
     }
 
+    @GetMapping("/team-info")
+    public ResponseEntity<List<UserMainTeamInfoDto>> getUserMainTeamInfo(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+
+        if (memberId == null) {
+            throw new UserNotFoundException("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
+        }
+        List<UserMainTeamInfoDto> userMainTeamInfoDto = userMainService.getUserMainTeamInfo(memberId);
+        return ResponseEntity.ok(userMainTeamInfoDto);
+    }
 }
