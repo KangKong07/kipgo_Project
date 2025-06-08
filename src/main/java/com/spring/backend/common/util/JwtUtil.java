@@ -93,4 +93,40 @@ public class JwtUtil {
 
         return claims.get(key, String.class);
     }
+
+    /**
+     * JWT 토큰 내 memberId, teamId 제거 후, 신규 토큰 발급
+     * @param token JWT 토큰
+     * @return 게스트 토큰 (로그아웃 상태용)
+     */
+    public String issueGuestToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(this.key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Map<String, Object> newClaims = new HashMap<>(claims);
+
+        // teamId 제거 & memberId 제거
+        newClaims.remove("teamId");
+        newClaims.remove("memberId");
+
+        // 게스트로 역할 설정
+        newClaims.put("role", "GUEST");
+
+        long now = System.currentTimeMillis();
+        long expiration = 1000 * 60 * 60 * 1; // 1시간(임시, 추후 refreshToken 적용 시 15분으로 변경예정)
+
+        return Jwts.builder()
+                .setClaims(newClaims)
+                // subject 생략 → memberId 제거 효과
+                .setIssuedAt(new Date(now)) // 발급시각
+                .setExpiration(new Date(now + expiration)) // 만료시각
+                .signWith(this.key, SignatureAlgorithm.HS256) // 서명
+                .compact();
+
+    }
+
+
 }

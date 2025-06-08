@@ -4,14 +4,12 @@ import com.spring.backend.common.response.ApiResponse;
 import com.spring.backend.dto.request.LoginRequest;
 import com.spring.backend.dto.request.RegisterRequest;
 import com.spring.backend.dto.response.LoginResponse;
+import com.spring.backend.dto.response.LogoutResponse;
 import com.spring.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -33,6 +31,16 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 로그아웃
+     * @Param
+     * @return 로그아웃 응답 정보(JWT 토큰 Delete)
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<LogoutResponse>> logout(@RequestHeader("Authorization") String authHeader) {
+        ApiResponse<LogoutResponse> response = authService.logout(authHeader);
+        return ResponseEntity.ok(response);
+    }
 
     /**
      * 회원가입

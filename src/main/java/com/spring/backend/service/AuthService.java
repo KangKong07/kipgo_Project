@@ -8,6 +8,7 @@ import com.spring.backend.dto.projection.LoginTeamInfoProjection;
 import com.spring.backend.dto.request.LoginRequest;
 import com.spring.backend.dto.request.RegisterRequest;
 import com.spring.backend.dto.response.LoginResponse;
+import com.spring.backend.dto.response.LogoutResponse;
 import com.spring.backend.model.Member;
 import com.spring.backend.repository.LoginRepository;
 import com.spring.backend.repository.MemberRepository;
@@ -96,5 +97,34 @@ public class AuthService {
                 .build();
 
         memberRepository.save(member);
+    }
+
+    /**
+     * 로그아웃
+     * @param authHeader 현재 Token 저장 정보
+     */
+    public ApiResponse<LogoutResponse> logout(String authHeader) {
+
+        // 1. 기존 Token 정보 추출
+        String token = authHeader.replace("Bearer ", "");
+
+        // 2. 기존 Token 내, memberId, teamId 정보 추출하여 검증
+        String memberId = jwtUtil.getMemberIdFromToken(token);
+        String teamId = jwtUtil.getClaimFromToken(token, "teamId");
+
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
+
+        System.out.println("memberId = " + memberId);
+        System.out.println("token = " + token);
+
+        // 3. 기존 토큰 정보 내 memberId, teamId 삭제 후, 신규 토큰 발급
+        String guestToken = jwtUtil.issueGuestToken(token);
+
+        // 4. 로그아웃 후, 신규 토큰 전달
+        LogoutResponse response = new LogoutResponse(guestToken);
+        System.out.println("### Logout Ok member :: " + memberId);  // 로그아웃 성공 여부 로그 기록
+
+        return ApiResponse.ok(response);
     }
 }
