@@ -1,8 +1,8 @@
 package com.spring.backend.controller;
 
 import com.spring.backend.common.response.ApiResponse;
-import com.spring.backend.dto.request.LoginRequest;
-import com.spring.backend.dto.request.RegisterRequest;
+import com.spring.backend.dto.request.LoginRequestDto;
+import com.spring.backend.dto.request.RegisterRequestDto;
 import com.spring.backend.dto.response.LoginResponse;
 import com.spring.backend.dto.response.LogoutResponse;
 import com.spring.backend.service.AuthService;
@@ -26,7 +26,7 @@ public class AuthController {
      * @return 로그인 응답 정보 (JWT 토큰 포함)
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>>  login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<LoginResponse>>  login(@RequestBody LoginRequestDto request) {
         ApiResponse<LoginResponse> response = authService.login(request);
         return ResponseEntity.ok(response);
     }
@@ -48,7 +48,7 @@ public class AuthController {
      * @return ApiResponse 처리상태, 성공 또는 실패 메시지
      */
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<?>> registerMember(@RequestBody RegisterRequest reqMember) {
+    public ResponseEntity<ApiResponse<?>> registerMember(@RequestBody RegisterRequestDto reqMember) {
         try {
             authService.registerMember(reqMember);    // 회원가입 처리 호출
             return ResponseEntity.ok(ApiResponse.success("회원가입 성공"));

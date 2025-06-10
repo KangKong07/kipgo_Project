@@ -5,8 +5,8 @@ import com.spring.backend.common.exception.UserNotFoundException;
 import com.spring.backend.common.response.ApiResponse;
 import com.spring.backend.common.util.JwtUtil;
 import com.spring.backend.dto.projection.LoginTeamInfoProjection;
-import com.spring.backend.dto.request.LoginRequest;
-import com.spring.backend.dto.request.RegisterRequest;
+import com.spring.backend.dto.request.LoginRequestDto;
+import com.spring.backend.dto.request.RegisterRequestDto;
 import com.spring.backend.dto.response.LoginResponse;
 import com.spring.backend.dto.response.LogoutResponse;
 import com.spring.backend.model.Member;
@@ -33,7 +33,7 @@ public class AuthService {
      * @param request 로그인 요청 정보
      * @return 로그인 응답 정보 (JWT 토큰 포함)
      */
-    public ApiResponse<LoginResponse> login(LoginRequest request) {
+    public ApiResponse<LoginResponse> login(LoginRequestDto request) {
 
         // 1. 회원ID로 회원 정보 조회(+존재여부체크)
         Member member = memberRepository.findByMemberId(request.getMemberId())
@@ -67,7 +67,7 @@ public class AuthService {
      * 회원가입
      * @param reqMember 회원가입 요청 정보
      */
-    public void registerMember(RegisterRequest reqMember) {
+    public void registerMember(RegisterRequestDto reqMember) {
 
         // 1. 회원ID 중복 체크
         boolean exists = memberRepository.existsByMemberId(reqMember.getMemberId());
