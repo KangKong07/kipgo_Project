@@ -1,5 +1,6 @@
 package com.spring.backend.controller;
 
+import com.spring.backend.dto.request.VacationRequestDto;
 import com.spring.backend.model.Week;
 import com.spring.backend.model.WeekId;
 import com.spring.backend.model.WeekMember;
@@ -28,12 +29,19 @@ class WeekVacationTest {
         String teamId = "kipgo216";
         String memberId = "rudgns3456";
         int weekNumber = 118;
+        String weekStaDate = "2025-06-10";
+        String weekEndDate = "2025-06-16";
+        String vacationYn = "Y";
 
-        Week week = weekRepository.findById(new WeekId(teamId, weekNumber))
-                .orElseThrow(() -> new IllegalArgumentException("해당 주차 정보가 없습니다."));
+        VacationRequestDto param = new VacationRequestDto();
+        param.setWeek(weekNumber);
+        param.setWeekStaDate(weekStaDate);
+        param.setWeekEndDate(weekEndDate);
+        param.setVacationYn(vacationYn);
+
 
         // when
-        WeekMember updated = weekService.saveVacation(teamId, memberId, week);
+        WeekMember updated = weekService.saveVacation(teamId, memberId, param);
 
         // then
         assertThat(updated).isNotNull();

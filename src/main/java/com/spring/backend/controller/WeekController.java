@@ -1,6 +1,7 @@
 package com.spring.backend.controller;
 
 import com.spring.backend.common.util.JwtUtil;
+import com.spring.backend.dto.request.VacationRequestDto;
 import com.spring.backend.dto.response.WeekInfoDto;
 import com.spring.backend.model.Week;
 import com.spring.backend.model.WeekId;
@@ -45,17 +46,18 @@ public class WeekController {
      * 참여 하는 팀 내 휴가 설정 변경
      */
     @PutMapping("/vacation/save")
-    public ResponseEntity<WeekMember> saveVacation(@RequestBody Week week,
+    public ResponseEntity<WeekMember> saveVacation(@RequestBody VacationRequestDto param,
                                                    @RequestHeader("Authorization") String authHeader) {
 
+        // 1. 헤더정보 추출
         String token = authHeader.replace("Bearer ", "");
         String memberId = jwtUtil.getMemberIdFromToken(token);
         String teamId = jwtUtil.getClaimFromToken(token, "teamId");
 
-        if (teamId == null || memberId == null) {
-            throw new IllegalStateException("로그인 필요한 요청입니다. 로그인 상태 여부를 확인하세요");
-        }
-        WeekMember updated = weekService.saveVacation(teamId, memberId, week);
+        // 2. 요청 파라미터에서 weekId 생성
+//        WeekId weekId = new WeekId(teamId, param.getWeek());
+
+        WeekMember updated = weekService.saveVacation(teamId, memberId, param);
         return ResponseEntity.ok(updated);
     }
 

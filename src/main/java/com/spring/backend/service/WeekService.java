@@ -1,5 +1,6 @@
 package com.spring.backend.service;
 
+import com.spring.backend.dto.request.VacationRequestDto;
 import com.spring.backend.dto.response.WeekInfoDto;
 import com.spring.backend.model.*;
 import com.spring.backend.repository.TeamMemberRepository;
@@ -54,8 +55,16 @@ public class WeekService {
 
     }
 
+    /**
+     * 나의 휴가상태 저장
+     * @param teamId
+     * @param memberId
+     * @param param
+     * @author KangKong07
+     */
     @Transactional
-    public WeekMember saveVacation(String teamId, String memberId, Week week) {
+    public WeekMember saveVacation(String teamId, String memberId, VacationRequestDto param) {
+
         // 1. 팀원 검증
         TeamMember searchTeamMember = teamMemberRepository.findById(new TeamMemberId(teamId, memberId))
                 .orElseThrow(() -> new NoSuchElementException("팀원 정보가 존재하지 않습니다."));
@@ -69,10 +78,11 @@ public class WeekService {
         teamMemberRepository.save(searchTeamMember); // 변경 감지되면 생략 가능
 
         // 3. 목표 작성 기한 검증
-        validateGoalDeadline(week.getWeekStaDate(), team.getGoalRegDeadline());
+        LocalDate weekStaDate = LocalDate.parse(param.getWeekStaDate());
+        validateGoalDeadline(weekStaDate, team.getGoalRegDeadline());
 
         // 4. 주차 회원 정보 조회 및 업데이트
-        WeekMemberId weekMemberId = new WeekMemberId(teamId, memberId, week.getWeekId().getWeek());
+        WeekMemberId weekMemberId = new WeekMemberId(teamId, memberId, param.getWeek());
         return weekMemberService.findById(weekMemberId)
                 .map(existingWeekMember -> weekMemberService.save(existingWeekMember.toBuilder()
                         .vacationYn("Y")
@@ -86,17 +96,14 @@ public class WeekService {
     }
 
     // 휴가일수 검증 로직
-    private void validateGoalDeadline(Date startDate, int deadlineDays) {
-        LocalDate deadline = startDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-                .plusDays(deadlineDays);
+    private void validateGoalDeadline(LocalDate startDate, int deadlineDays) {
 
-        Date deadlineDate = Date.from(deadline.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date now = new Date();
+        LocalDate deadline = startDate.plusDays(deadlineDays);
+        LocalDate today = LocalDate.now();
+        System.out.println("# validateGoalDeadline deadline :: " + deadline + " / today :: " + today);
 
-        if (now.after(deadlineDate)) {
-            throw new IllegalArgumentException("목표 등록 기한이 지났습니다. (기한: " + deadlineDate + "까지)");
+        if (today.isAfter(deadline)) {
+            throw new IllegalArgumentException("목표 등록 기한이 지났습니다. (기한: " + deadline + "까지)");
         }
     }
 
